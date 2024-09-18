@@ -1,13 +1,13 @@
 2024年9月26日 - [PostgreSQL全球开发组](https://www.postgresql.org)宣布[PostgreSQL 17]((https://www.postgresql.org/docs/17/release-17.html))正式发布，作为世界上最先进的开源数据库，PostgreSQL 17 是目前的最新版本。
 
-PostgreSQL 17在数十年的开源开发的基础上，提升了其性能和可扩展性，同时适应新兴的数据访问和存储模式。这个版本的[PostgreSQL](https://www.postgresql.org)在整体性能上有显著提升，包括对VACCUM的内存管理实现进行了全面改进，优化了存储访问和高并发工作负载，加快了批量加载和导出速度，以及改进了索引的查询执行。PostgreSQL 17 引入了一系列新特性，这些特性既适用于全新的工作负载，也能满足关键系统的需求，例如通过SQL/JSON的 `JSON_TABLE` 命令改善了开发者体验，以及增强了逻辑复制功能，简化了高可用工作负载和主要版本升级的管理。
+PostgreSQL 17在数十年的开源开发的基础上，提升了其性能和可扩展性，同时适应新兴的数据访问和存储模式。这个版本的[PostgreSQL](https://www.postgresql.org)在整体性能上有显著提升，包括对vacuum的内存管理实现进行了全面改进，优化了存储访问和高并发工作负载，加快了批量加载和导出速度，以及改进了索引的查询执行。PostgreSQL 17 引入了一系列新特性，这些特性既适用于全新的工作负载，也能满足关键系统的需求，例如通过SQL/JSON的 `JSON_TABLE` 命令改善了开发者体验，以及增强了逻辑复制功能，简化了高可用工作负载和主要版本升级的管理。
 
 “PostgreSQL 17 突出展示了全球开源社区（推动PostgreSQL开发的力量）如何帮助不同阶段数据库用户构建增强功能”， PostgreSQL 核心团队成员 Jonathan Katz 说，“无论是提升大规模数据库的操作性能，还是使开发者拥有愉悦体验的新特性，PostgreSQL 17 都将提升您的数据管理体验。”
 
 PostgreSQL是一个创新的数据管理系统，以其可靠性和健壮性著称，得益于全球开发者社区超过25年的开源开发，已经成为各种规模组织的首选开源关系型数据库。
 
 ### 系统级性能提升
-PostgreSQL的[vacuum](https://www.postgresql.org/docs/17/routine-vacuuming.html)过程对于数据库的健康运行至关重要，它需要消耗服务器实例的资源来执行操作。PostgreSQL 17 引入了一种新的vacuum内部内存结构用于 vacuum 操作，最高可以减少20倍内存消耗。这不仅提高了 vacuum 的执行速度，还减少了对共享资源的使用，从而为您的工作负载腾出更多资源。
+PostgreSQL的[vacuum](https://www.postgresql.org/docs/17/routine-vacuuming.html)进程对于数据库的健康运行至关重要，它需要消耗服务器实例的资源来执行操作。PostgreSQL 17 引入了一种新的vacuum内部内存结构用于 vacuum 操作，最高可以减少20倍内存消耗。这不仅提高了 vacuum 的执行速度，还减少了对共享资源的使用，从而为您的工作负载腾出更多资源。
 
 PostgreSQL 17 继续提升 I/O 层的性能。由于改进了[预写日志](https://www.postgresql.org/docs/17/wal-intro.html)([WAL](https://www.postgresql.org/docs/17/wal-intro.html))处理，高并发工作负载的写入吞吐量提升最多高达2倍。此外，新的流式 I/O 接口加快了顺序扫描（读取表中所有数据）和[`ANALYZE`](https://www.postgresql.org/docs/17/sql-analyze.html)更新查询规划器统计信息的速度。
 
@@ -22,11 +22,11 @@ PostgreSQL 17 为[`MERGE`命令](https://www.postgresql.org/docs/17/sql-merge.ht
 
 这个版本扩展了管理分区数据和分布在远程PostgreSQL实例上的数据的功能。PostgreSQL 17 支持在[分区表](https://www.postgresql.org/docs/17/ddl-partitioning.html)上使用身份列和排除约束。用于在远程PostgreSQL实例上执行查询的PostgreSQL[外部数据封装器]((https://www.postgresql.org/docs/17/postgres-fdw.html))([`postgres_fdw`](https://www.postgresql.org/docs/17/postgres-fdw.html))现在可以将 `EXISTS` 和 `IN` 子查询下推到远程服务器以进行更高效的处理。
 
-PostgreSQL 17 还包括一个内置的、跨平台的、不可变的排序规则提供程序，保证是不可变的，并提供类似于 `C` 排序规则的排序语义，除了使用 `UTF-8` 编码而非 `SQL_ASCII`。使用这个新的排序规则提供程序可以确保无论 PostgreSQL 运行在哪，基于文本的查询都能返回相同的排序结果。
+PostgreSQL 17 还包括一个内置的、跨平台的、保证不可变的排序规则提供程序。它提供类似于 `C` 排序规则的排序语义，但使用的是 `UTF-8` 编码而非 `SQL_ASCII`。通过使用这个新的排序规则提供程序，可以确保无论 PostgreSQL 运行在哪，基于文本的查询都能返回相同的排序结果。
 
-### 高可用环境和大版本升级时的逻辑复制增强功能
+### 高可用环境和主版本升级时的逻辑复制增强功能
 
-[逻辑复制](https://www.postgresql.org/docs/17/logical-replication.html)用于在许多场景下实时流式传输数据。然而，在此版本之前，想要执行大版本升级的用户必须删除[逻辑复制槽](https://www.postgresql.org/docs/17/logical-replication-subscription.html#LOGICAL-REPLICATION-SUBSCRIPTION-SLOT)，这需要在升级后重新同步订阅者的数据。从PostgreSQL 17开始，用户无需删除逻辑复制槽，从而简化了使用逻辑复制时的升级过程。
+[逻辑复制](https://www.postgresql.org/docs/17/logical-replication.html)用于在许多场景下实时流式传输数据。然而，在此版本之前，想要执行主版本升级的用户必须删除[逻辑复制槽](https://www.postgresql.org/docs/17/logical-replication-subscription.html#LOGICAL-REPLICATION-SUBSCRIPTION-SLOT)，这需要在升级后重新同步订阅者的数据。从PostgreSQL 17开始，用户无需删除逻辑复制槽，从而简化了使用逻辑复制时的升级过程。
 
 PostgreSQL 17 现在包括对逻辑复制的故障切换控制，使其在高可用环境中更加可靠。此外，PostgreSQL 17 引入了 [`pg_createsubscriber`](https://www.postgresql.org/docs/17/app-pgcreatesubscriber.html)命令行工具，用于在使用物理复制的副本从库上创建逻辑复制。
 
